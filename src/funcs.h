@@ -64,9 +64,10 @@ char *ProfLoad(char *app)
 void ResReset()
 {
     BOOL reset = FALSE;
+    int delay = AutoDelay();
     for (;;)
     {
-        Sleep(100);
+        Sleep(delay);
         struct WindowInfo wi = GetForegroundWindowInfo();
         if (strcmp(wi.exe, "ApplicationFrameHost.exe") != 0)
         {
@@ -85,7 +86,6 @@ void ResReset()
         if (reset == TRUE)
         {
             ChangeDisplaySettings(NULL, 0);
-            printf("Reset\n");
             break;
         }
     }
@@ -95,10 +95,11 @@ void ResReset()
 void ResApply()
 {
     BOOL apply = FALSE;
+    int delay = AutoDelay();
     char *res = NULL + 1;
     for (;;)
     {
-        Sleep(100);
+        Sleep(delay);
         struct WindowInfo wi = GetForegroundWindowInfo();
         if (strcmp(wi.exe, "ApplicationFrameHost.exe") == 0)
         {
@@ -124,7 +125,6 @@ void ResApply()
             devmode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT;
             devmode.dmSize = sizeof(DEVMODE);
             ChangeDisplaySettings(&devmode, 0);
-            printf("Apply\n");
             break;
         }
     }

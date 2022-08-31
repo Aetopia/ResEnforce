@@ -2,6 +2,22 @@
 #include <winuser.h>
 #include <stdio.h>
 #include <psapi.h>
+#include <unistd.h>
+
+int AutoDelay()
+{
+    SYSTEM_INFO sysinfo;
+    GetSystemInfo(&sysinfo);
+    int cpu_count = sysinfo.dwNumberOfProcessors;
+    if (cpu_count <= 4)
+    {
+        return 1000;
+    }
+    else
+    {
+        return 100;
+    }
+}
 
 char *GetTitle(HWND hwnd)
 {
@@ -48,4 +64,3 @@ char *GetFileDir(char *filepath)
     free(filepath);
     return path;
 }
-
