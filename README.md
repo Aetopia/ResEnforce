@@ -47,5 +47,5 @@ Useful for UWP/Fullscreen Borderless Games since those don't support the ability
 2. Go into the `src` directory.
 3. Run:
    ```
-   gcc main.c -o ResEnforce.exe
+    gcc main.c -mwindows -o ResEnforce.exe
    ```
