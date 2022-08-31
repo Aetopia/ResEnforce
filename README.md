@@ -21,12 +21,12 @@ Useful for UWP/Fullscreen Borderless Games since those don't support the ability
 5. Adding a new profile is easy:       
     **Note: Executable and title names are case sensitive!**
    1. For Win32 Applications:
-      `App.exe = A x B`           
+      `App.exe = A x B`                    
       Where, `App.exe` is the name of the executable and `A x B` is the resolution to be used.      
       Example: `HaloInfinite.exe = 1600x900`   
 
    2. For UWP Apps:
-      `App Title = A x B`
+      `App Title = A x B`                           
        Where, `App Title` is the name of the UWP App and `A x B` is the resolution to be used.   
        Example: `Minecraft = 1280x720`
 
