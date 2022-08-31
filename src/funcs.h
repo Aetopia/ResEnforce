@@ -41,7 +41,7 @@ BOOL ProfCheck(char *app)
 {
     ini_t *ini = ini_load("Options.ini");
     const char *name = ini_get(ini, "Profiles", app);
-    free(ini);
+    ini_free(ini);
     if (name == NULL)
     {
         return FALSE;
@@ -56,7 +56,7 @@ char *ProfLoad(char *app)
 {
     ini_t *ini = ini_load("Options.ini");
     const char *name = ini_get(ini, "Profiles", app);
-    free(ini);
+    ini_free(ini);
     return (char *)name;
 }
 
