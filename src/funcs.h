@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <winuser.h>
 #include <windows.h>
-
+#include <libgen.h>
 void ResApply(void);
 
 struct WindowInfo
@@ -16,9 +16,12 @@ struct WindowInfo
 struct WindowInfo GetForegroundWindowInfo()
 {
     HWND hwnd = GetForegroundWindow();
+    char *filepath = GetExe(GetPID(hwnd));
+    char *exe = basename(filepath);
+    free(filepath);
     struct WindowInfo wininfo;
     wininfo.title = GetTitle(hwnd);
-    wininfo.exe = GetFileExt(GetExe(GetPID(hwnd)));
+    wininfo.exe = exe;
     wininfo.pid = GetPID(hwnd);
     return wininfo;
 }
@@ -83,7 +86,6 @@ void ResReset()
         };
 
         free(wi.title);
-        free(wi.exe);
         if (reset == TRUE)
         {
             ChangeDisplaySettings(NULL, 0);
@@ -97,11 +99,12 @@ void ResApply()
 {
     BOOL apply = FALSE;
     int delay = AutoDelay();
-    char *res = NULL + 1;
+    char *res;
     for (;;)
     {
         Sleep(delay);
         struct WindowInfo wi = GetForegroundWindowInfo();
+
         if (strcmp(wi.exe, "ApplicationFrameHost.exe") == 0)
         {
             if (ProfCheck(wi.title) == TRUE)
@@ -117,7 +120,6 @@ void ResApply()
         }
 
         free(wi.title);
-        free(wi.exe);
         if (apply)
         {
             DEVMODE devmode;
