@@ -33,6 +33,7 @@ void OptsExist()
                       "; Title or Executable Name = Resolution\n"
                       "; Example.exe = 1600x900\n"
                       "; Example = 1280x720 \n");
+        fclose(fptr);
     }
 }
 
