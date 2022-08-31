@@ -5,5 +5,6 @@
 int main(int argc, char *argv[])
 {  
     chdir(GetFileDir(argv[0]));
-    ResEnforce();
+    OptsExist();
+    ResApply();
 }

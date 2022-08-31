@@ -2,7 +2,6 @@
 #include <winuser.h>
 #include <stdio.h>
 #include <psapi.h>
-#include <ctype.h>
 
 char *GetTitle(HWND hwnd)
 {
@@ -49,3 +48,4 @@ char *GetFileDir(char *filepath)
     free(filepath);
     return path;
 }
+
