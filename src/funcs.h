@@ -2,8 +2,8 @@
 #include "ini.c"
 #include <unistd.h>
 #include <winuser.h>
-#include <windows.h>
 #include <libgen.h>
+
 void ResApply(void);
 
 struct WindowInfo

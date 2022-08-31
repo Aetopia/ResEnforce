@@ -1,8 +1,5 @@
 #include <windows.h>
-#include <winuser.h>
-#include <stdio.h>
 #include <psapi.h>
-#include <unistd.h>
 
 int AutoDelay()
 {
