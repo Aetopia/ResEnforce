@@ -4,6 +4,7 @@
 #include <winuser.h>
 #include <libgen.h>
 
+
 void ResApply(void);
 
 struct WindowInfo
