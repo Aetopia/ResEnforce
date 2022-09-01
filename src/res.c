@@ -23,7 +23,7 @@ void ResApply()
     {
         Sleep(AutoDelay());
         struct WindowInfo wi = GetForegroundWindowInfo();
-        printf("%s | %s \n", wi.title, wi.exe);
+
         if (strcmp(wi.exe, "ApplicationFrameHost.exe") == 0)
         {
             if (ProfCheck(wi.title) == TRUE)
@@ -60,7 +60,7 @@ void ResReset()
     {
         Sleep(AutoDelay());
         struct WindowInfo wi = GetForegroundWindowInfo();
-        printf("%s | %s \n", wi.title, wi.exe);
+
         if (strcmp(wi.exe, "ApplicationFrameHost.exe") == 0)
         {
             if (ProfCheck(wi.title) == FALSE)
