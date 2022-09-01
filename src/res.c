@@ -1,4 +1,4 @@
-#include "resloop.h"
+#include "res.h"
 
 int AutoDelay()
 {
@@ -15,7 +15,7 @@ int AutoDelay()
     }
 }
 
-void ResEnforce()
+void ResApply()
 {
     BOOL apply = FALSE;
     int delay = AutoDelay();
@@ -82,5 +82,5 @@ void ResReset()
             break;
         }
     }
-    ResEnforce();
+    ResApply();
 }

@@ -6,5 +6,5 @@
 #include "opts.h"
 
 int AutoDelay(void);
-void ResEnforce(void);
+void ResApply(void);
 void ResReset(void);

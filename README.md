@@ -43,8 +43,17 @@ Useful for UWP/Fullscreen Borderless Games since those don't support the ability
 7. Simply save the file!
 
 # Building
-1. Download the source code and make sure GCC is installed. (Other compilers will also work.)
-2. Run:
-   ```cmd
-    gcc src/*.c -mwindows -o ResEnforce.exe
+1. Download the source code and make sure GCC and UPX is installed. (Other compilers will also work.)
+   ```powershell
+   # You can easily grab them via Scoop.
+   scoop.cmd install gcc upx
+   ```
+
+2. Run in PowerShell:
+   ```powershell
+   # Compiles ResEnforce natively for Windows.
+   gcc src/*.c -mwindows -flto -Os -mtune=native -Wall -Wextra -o ResEnforce.exe
+
+   # Compresses the executable.
+   upx -9 ResEnforce.exe
    ```
