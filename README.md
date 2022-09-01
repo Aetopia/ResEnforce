@@ -52,7 +52,7 @@ Useful for UWP/Fullscreen Borderless Games since those don't support the ability
 2. Run in PowerShell:
    ```powershell
    # Compile ResEnforce.
-   gcc src/*.c -mwindows -o ResEnforce.exe
+   gcc src/*.c -mwindows -Wall -Wextra -o ResEnforce.exe
 
    # Compress the executable.
    upx -9 ResEnforce.exe
