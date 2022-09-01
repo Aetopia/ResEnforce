@@ -43,7 +43,7 @@ Useful for UWP/Fullscreen Borderless Games since those don't support the ability
 7. Simply save the file!
 
 # Building
-1. Download the source code and make sure GCC and UPX is installed. (Other compilers will also work.)
+1. Download the source code and make sure GCC & UPX are installed. (Other compilers will also work.)
    ```powershell
    # You can easily grab them via Scoop.
    scoop.cmd install gcc upx
