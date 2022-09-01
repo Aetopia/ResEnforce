@@ -24,25 +24,22 @@ void ResEnforce()
     {
         Sleep(delay);
         struct WindowInfo wi = GetForegroundWindowInfo();
-        char *title = wi.title;
-        char *exe = basename(wi.exe);
 
-        if (strcmp(exe, "ApplicationFrameHost.exe") == 0)
+        if (strcmp(wi.exe, "ApplicationFrameHost.exe") == 0)
         {
-            if (ProfCheck(title) == TRUE)
+            if (ProfCheck(wi.title) == TRUE)
             {
-                res = ProfLoad(title);
+                res = ProfLoad(wi.title);
                 apply = TRUE;
             }
         }
-        else if (ProfCheck(exe) == TRUE)
+        else if (ProfCheck(wi.exe) == TRUE)
         {
-            res = ProfLoad(exe);
+            res = ProfLoad(wi.exe);
             apply = TRUE;
         }
 
         free(wi.title);
-        free(wi.exe);
         if (apply == TRUE)
         {
             DEVMODE devmode;
@@ -65,23 +62,20 @@ void ResReset()
     {
         Sleep(delay);
         struct WindowInfo wi = GetForegroundWindowInfo();
-        char *title = wi.title;
-        char *exe = basename(wi.exe);
 
-        if (strcmp(exe, "ApplicationFrameHost.exe") == 0)
+        if (strcmp(wi.exe, "ApplicationFrameHost.exe") == 0)
         {
-            if (ProfCheck(title) == FALSE)
+            if (ProfCheck(wi.title) == FALSE)
             {
                 reset = TRUE;
             }
         }
-        else if (ProfCheck(exe) == FALSE)
+        else if (ProfCheck(wi.exe) == FALSE)
         {
             reset = TRUE;
         };
 
         free(wi.title);
-        free(wi.exe);
         if (reset == TRUE)
         {
             ChangeDisplaySettings(NULL, 0);

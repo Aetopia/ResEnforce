@@ -30,6 +30,7 @@ struct WindowInfo GetForegroundWindowInfo()
     DWORD pid = GetWindowPID(hwnd);
     char *title = GetWindowTitle(hwnd);
     char *exe = GetWindowExe(pid);
-    struct WindowInfo info = {title, exe};
+    struct WindowInfo info = {title, basename(exe)};
+    free(exe);
     return info;
 }
