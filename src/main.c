@@ -2,11 +2,22 @@
 #include "opts.h"
 #include "res.h"
 
-int main(int argc, char *argv[])
+int main(int, char *argv[])
 {
-    (void)argc;
+    int delay;
+    SYSTEM_INFO sysinfo;
+    GetSystemInfo(&sysinfo);
+    int cpu_count = sysinfo.dwNumberOfProcessors;
+    if (cpu_count <= 4)
+    {
+        delay = 1000;
+    }
+    else
+    {
+        delay = 100;
+    }
     chdir(dirname(argv[0]));
     OptsExist();
-    ResApply();
+    ResApply(delay);
     return 0;
 }

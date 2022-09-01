@@ -1,27 +1,12 @@
 #include "res.h"
 
-int AutoDelay()
-{
-    SYSTEM_INFO sysinfo;
-    GetSystemInfo(&sysinfo);
-    int cpu_count = sysinfo.dwNumberOfProcessors;
-    if (cpu_count <= 4)
-    {
-        return 1000;
-    }
-    else
-    {
-        return 100;
-    }
-}
-
-void ResApply()
+void ResApply(int delay)
 {
     BOOL apply = FALSE;
     char *res;
     for (;;)
     {
-        Sleep(AutoDelay());
+        Sleep(delay);
         struct WindowInfo wi = GetForegroundWindowInfo();
 
         if (strcmp(wi.exe, "ApplicationFrameHost.exe") == 0)
@@ -50,15 +35,15 @@ void ResApply()
             break;
         }
     }
-    ResReset();
+    ResReset(delay);
 }
 
-void ResReset()
+void ResReset(int delay)
 {
     BOOL reset = FALSE;
     for (;;)
     {
-        Sleep(AutoDelay());
+        Sleep(delay);
         struct WindowInfo wi = GetForegroundWindowInfo();
 
         if (strcmp(wi.exe, "ApplicationFrameHost.exe") == 0)
@@ -80,5 +65,5 @@ void ResReset()
             break;
         }
     }
-    ResApply();
+    ResApply(delay);
 }

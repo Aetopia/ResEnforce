@@ -5,6 +5,5 @@
 #include "winhook.h"
 #include "opts.h"
 
-int AutoDelay(void);
-void ResApply(void);
-void ResReset(void);
+void ResApply(int delay);
+void ResReset(int delay);
