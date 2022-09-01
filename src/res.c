@@ -18,11 +18,10 @@ int AutoDelay()
 void ResApply()
 {
     BOOL apply = FALSE;
-    int delay = AutoDelay();
     char *res;
     for (;;)
     {
-        Sleep(delay);
+        Sleep(AutoDelay());
         struct WindowInfo wi = GetForegroundWindowInfo();
         printf("%s | %s \n", wi.title, wi.exe);
         if (strcmp(wi.exe, "ApplicationFrameHost.exe") == 0)
@@ -57,10 +56,9 @@ void ResApply()
 void ResReset()
 {
     BOOL reset = FALSE;
-    int delay = AutoDelay();
     for (;;)
     {
-        Sleep(delay);
+        Sleep(AutoDelay());
         struct WindowInfo wi = GetForegroundWindowInfo();
         printf("%s | %s \n", wi.title, wi.exe);
         if (strcmp(wi.exe, "ApplicationFrameHost.exe") == 0)
