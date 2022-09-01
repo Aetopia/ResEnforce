@@ -24,7 +24,7 @@ void ResApply()
     {
         Sleep(delay);
         struct WindowInfo wi = GetForegroundWindowInfo();
-
+        printf("%s | %s \n", wi.title, wi.exe);
         if (strcmp(wi.exe, "ApplicationFrameHost.exe") == 0)
         {
             if (ProfCheck(wi.title) == TRUE)
@@ -33,7 +33,7 @@ void ResApply()
                 apply = TRUE;
             }
         }
-        else if (ProfCheck(wi.exe) == TRUE)
+        else if ((ProfCheck(wi.exe) == TRUE) && (strcmp(wi.exe, ".") != 0))
         {
             res = ProfLoad(wi.exe);
             apply = TRUE;
@@ -62,7 +62,7 @@ void ResReset()
     {
         Sleep(delay);
         struct WindowInfo wi = GetForegroundWindowInfo();
-
+        printf("%s | %s \n", wi.title, wi.exe);
         if (strcmp(wi.exe, "ApplicationFrameHost.exe") == 0)
         {
             if (ProfCheck(wi.title) == FALSE)
@@ -70,7 +70,7 @@ void ResReset()
                 reset = TRUE;
             }
         }
-        else if (ProfCheck(wi.exe) == FALSE)
+        else if ((ProfCheck(wi.exe) == FALSE) && (strcmp(wi.exe, ".") != 0))
         {
             reset = TRUE;
         };
