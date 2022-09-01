@@ -44,8 +44,7 @@ Useful for UWP/Fullscreen Borderless Games since those don't support the ability
 
 # Building
 1. Download the source code and make sure GCC is installed. (Other compilers will also work.)
-2. Go into the `src` directory.
-3. Run:
-   ```
-    gcc main.c -mwindows -o ResEnforce.exe
+2. Run:
+   ```cmd
+    gcc src/*.c -mwindows -o ResEnforce.exe
    ```
