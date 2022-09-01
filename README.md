@@ -54,6 +54,6 @@ Useful for UWP/Fullscreen Borderless Games since those don't support the ability
    # Compile ResEnforce.
    gcc src/*.c -mwindows -Wall -Wextra -o ResEnforce.exe
 
-   # Compress the executable.
+   # Compress the compiled executable.
    upx -9 ResEnforce.exe
    ```
