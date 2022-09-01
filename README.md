@@ -51,9 +51,9 @@ Useful for UWP/Fullscreen Borderless Games since those don't support the ability
 
 2. Run in PowerShell:
    ```powershell
-   # Compiles ResEnforce natively for Windows.
-   gcc src/*.c -mwindows -flto -Os -mtune=native -Wall -Wextra -o ResEnforce.exe
+   # Compile ResEnforce.
+   gcc src/*.c -mwindows -o ResEnforce.exe
 
-   # Compresses the executable.
+   # Compress the executable.
    upx -9 ResEnforce.exe
    ```
