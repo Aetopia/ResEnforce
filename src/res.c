@@ -3,31 +3,33 @@
 void ResApply(int delay)
 {
     BOOL apply = FALSE;
-    char *res;
+    struct WindowInfo wininfo;
+    struct Profile prof;
+
     for (;;)
     {
         Sleep(delay);
-        struct WindowInfo wi = GetForegroundWindowInfo();
 
-        if (strcmp(wi.exe, "ApplicationFrameHost.exe") == 0)
+        wininfo = GetForegroundWindowInfo();
+        prof = ProfileLoad(wininfo.title, wininfo.exe);
+        free(wininfo.title);
+
+        if (strcmp(wininfo.exe, "ApplicationFrameHost.exe") == 0)
         {
-            if (ProfCheck(wi.title) == TRUE)
+            if (prof.title == TRUE)
             {
-                res = ProfLoad(wi.title);
                 apply = TRUE;
             }
         }
-        else if ((ProfCheck(wi.exe) == TRUE) && (strcmp(wi.exe, ".") != 0))
+        else if ((prof.exe == TRUE) && (strcmp(wininfo.exe, ".") != 0))
         {
-            res = ProfLoad(wi.exe);
             apply = TRUE;
         }
 
-        free(wi.title);
         if (apply == TRUE)
         {
             DEVMODE devmode;
-            devmode.dmPelsWidth = atoi(strtok(res, "x"));
+            devmode.dmPelsWidth = atoi(strtok(prof.res, "x"));
             devmode.dmPelsHeight = atoi(strtok(NULL, "x"));
             devmode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT;
             devmode.dmSize = sizeof(DEVMODE);
@@ -41,24 +43,29 @@ void ResApply(int delay)
 void ResReset(int delay)
 {
     BOOL reset = FALSE;
+    struct WindowInfo wininfo;
+    struct Profile prof;
+
     for (;;)
     {
         Sleep(delay);
-        struct WindowInfo wi = GetForegroundWindowInfo();
 
-        if (strcmp(wi.exe, "ApplicationFrameHost.exe") == 0)
+        wininfo = GetForegroundWindowInfo();
+        prof = ProfileLoad(wininfo.title, wininfo.exe);
+        free(wininfo.title);
+
+        if (strcmp(wininfo.exe, "ApplicationFrameHost.exe") == 0)
         {
-            if (ProfCheck(wi.title) == FALSE)
+            if (prof.title == FALSE)
             {
                 reset = TRUE;
             }
         }
-        else if ((ProfCheck(wi.exe) == FALSE) && (strcmp(wi.exe, ".") != 0))
+        else if ((prof.exe == FALSE) && (strcmp(wininfo.exe, ".") != 0))
         {
             reset = TRUE;
         };
 
-        free(wi.title);
         if (reset == TRUE)
         {
             ChangeDisplaySettings(NULL, 0);

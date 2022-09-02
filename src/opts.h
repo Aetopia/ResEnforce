@@ -6,6 +6,12 @@
 #include <stdio.h>
 #include "ini.h"
 
+struct Profile
+{
+    BOOL title;
+    BOOL exe;
+    char *res;
+};
+
 void OptsExist(void);
-int ProfCheck(char *app);
-char *ProfLoad(char *app);
+struct Profile ProfileLoad(char *title, char *exe);

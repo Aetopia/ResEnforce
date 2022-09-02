@@ -14,26 +14,34 @@ void OptsExist()
     }
 }
 
-// Profiles
-int ProfCheck(char *app)
+struct Profile ProfileLoad(char *title, char *exe)
 {
+    char *res, *res_t, *res_e;
+    BOOL prof_t = FALSE, prof_e = FALSE;
     ini_t *ini = ini_load("Options.ini");
-    const char *name = ini_get(ini, "Profiles", app);
-    ini_free(ini);
-    if (name == NULL)
-    {
-        return FALSE;
-    }
-    else
-    {
-        return TRUE;
-    }
-}
 
-char *ProfLoad(char *app)
-{
-    ini_t *ini = ini_load("Options.ini");
-    const char *name = ini_get(ini, "Profiles", app);
+    if (ini == NULL)
+    {
+        ChangeDisplaySettings(NULL, 0);
+        MessageBox(NULL, "Resolution Enforcer couldn't load \"Options.ini\".", "Error", MB_OK | MB_ICONERROR);
+        exit(1);
+    }
+
+    res_t = ini_get(ini, "Profiles", title);
+    res_e = ini_get(ini, "Profiles", exe);
     ini_free(ini);
-    return (char *)name;
+
+    if (res_t != NULL)
+    {
+        prof_t = TRUE;
+        res = res_t;
+    }
+    if (res_e != NULL)
+    {
+        prof_e = TRUE;
+        res = res_e;
+    }
+
+    struct Profile prof = {prof_t, prof_e, res};
+    return prof;
 }
