@@ -45,7 +45,7 @@ Useful for UWP/Fullscreen Borderless Games since those don't support the ability
 ### How to close Resolution Enforcer?
 There are 2 ways to close Resolution Enforcer [`ResEnforce.exe`]:
 
-1. In `CMD` or `PowerShell`:         
+1. In `CMD` or `PowerShell` run:         
    ```cmd       
    taskkill /im ResEnforce.exe /f
    ```
