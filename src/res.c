@@ -21,7 +21,7 @@ void ResApply(int delay)
                 apply = TRUE;
             }
         }
-        else if ((prof.exe == TRUE) && (strcmp(wininfo.exe, ".") != 0))
+        else if (prof.exe == TRUE)
         {
             apply = TRUE;
         }
@@ -61,7 +61,7 @@ void ResReset(int delay)
                 reset = TRUE;
             }
         }
-        else if ((prof.exe == FALSE) && (strcmp(wininfo.exe, ".") != 0))
+        else if (prof.exe == FALSE)
         {
             reset = TRUE;
         };
