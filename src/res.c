@@ -3,18 +3,16 @@
 void ResApply(int delay)
 {
     BOOL apply = FALSE;
-    struct WindowInfo wininfo;
+    struct Window win;
     struct Profile prof;
 
     for (;;)
     {
-        Sleep(delay);
+        win = GetForegroundWindowInfo();
+        prof = ProfileLoad(win.title, win.exe);
+        free(win.title);
 
-        wininfo = GetForegroundWindowInfo();
-        prof = ProfileLoad(wininfo.title, wininfo.exe);
-        free(wininfo.title);
-
-        if (strcmp(wininfo.exe, "ApplicationFrameHost.exe") == 0)
+        if (strcmp(win.exe, "ApplicationFrameHost.exe") == 0)
         {
             if (prof.title == TRUE)
             {
@@ -36,6 +34,7 @@ void ResApply(int delay)
             ChangeDisplaySettings(&devmode, 0);
             break;
         }
+        Sleep(delay);
     }
     ResReset(delay);
 }
@@ -43,18 +42,17 @@ void ResApply(int delay)
 void ResReset(int delay)
 {
     BOOL reset = FALSE;
-    struct WindowInfo wininfo;
+    struct Window win;
     struct Profile prof;
 
     for (;;)
     {
-        Sleep(delay);
 
-        wininfo = GetForegroundWindowInfo();
-        prof = ProfileLoad(wininfo.title, wininfo.exe);
-        free(wininfo.title);
+        win = GetForegroundWindowInfo();
+        prof = ProfileLoad(win.title, win.exe);
+        free(win.title);
 
-        if (strcmp(wininfo.exe, "ApplicationFrameHost.exe") == 0)
+        if (strcmp(win.exe, "ApplicationFrameHost.exe") == 0)
         {
             if (prof.title == FALSE)
             {
@@ -71,6 +69,7 @@ void ResReset(int delay)
             ChangeDisplaySettings(NULL, 0);
             break;
         }
+        Sleep(delay);
     }
     ResApply(delay);
 }

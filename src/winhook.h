@@ -5,13 +5,10 @@
 #include <winuser.h>
 #include <libgen.h>
 
-struct WindowInfo
+struct Window
 {
     char *title;
     char *exe;
 };
 
-DWORD GetWindowPID(HWND hwnd);
-char *GetWindowTitle(HWND hwnd);
-char *GetWindowExe(DWORD pid);
-struct WindowInfo GetForegroundWindowInfo();
+struct Window GetForegroundWindowInfo();
