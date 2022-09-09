@@ -63,9 +63,10 @@ There are 2 ways to close Resolution Enforcer `ResEnforce.exe`:
    ```
 
 2. Run in PowerShell:
+   For the C Source Code.
    ```powershell
    # Compile ResEnforce.
-   gcc src/*.c -mwindows -Wall -Wextra -o ResEnforce.exe
+   gcc src/C/*.c -mwindows -Wall -Wextra -o ResEnforce.exe
 
    # Compress the compiled executable.
    upx -9 ResEnforce.exe
