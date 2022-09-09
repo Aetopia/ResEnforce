@@ -63,6 +63,13 @@ There are 2 ways to close Resolution Enforcer `ResEnforce.exe`:
    ```
    You can install the Nim Compiler from:
    > https://github.com/dom96/choosenim
+   
+   Once Nim is installed on your system, fetch [**`winim`**](https://github.com/khchen/winim) (Nim's Windows API and COM Library).            
+
+   **Note: Make sure `Git` is installed!**
+   ```powershell
+   nimble install winim
+   ```
 
 2. Run in PowerShell:     
 
