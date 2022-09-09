@@ -62,12 +62,22 @@ There are 2 ways to close Resolution Enforcer `ResEnforce.exe`:
    scoop.cmd install gcc upx
    ```
 
-2. Run in PowerShell:
-   For the C Source Code.
-   ```powershell
-   # Compile ResEnforce.
-   gcc src/C/*.c -mwindows -Wall -Wextra -o ResEnforce.exe
+2. Run in PowerShell:     
 
-   # Compress the compiled executable.
-   upx -9 ResEnforce.exe
-   ```
+   - For the C Source Code.
+      ```powershell              
+      # Compile ResEnforce.
+      gcc src/C/*.c -mwindows -Wall -Wextra -o ResEnforce.exe
+
+      # Compress the compiled executable.
+      upx -9 ResEnforce.exe
+      ```
+   - For the Nim Source Code:             
+
+      ```powershell
+      # Compile ResEnforce.
+      nim -d:release --app:gui -o ResEnforce.exe c src/Nim/main.nim
+
+      # Compress the compiled executable.
+      upx -9 ResEnforce.exe
+      ```
