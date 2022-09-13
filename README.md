@@ -74,7 +74,7 @@ There are 2 ways to close Resolution Enforcer `ResEnforce.exe`:
 2. Run in PowerShell:              
    ```powershell
    # Compile ResEnforce.
-   nim -d:release --app:gui -o ResEnforce.exe c src/Nim/main.nim
+   nim -d:release --app:gui -o:ResEnforce.exe c src/main.nim
 
    # Compress the compiled executable.
    upx -9 ResEnforce.exe
