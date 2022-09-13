@@ -59,7 +59,7 @@ There are 2 ways to close Resolution Enforcer `ResEnforce.exe`:
 1. Download the source code and make sure GCC & UPX are installed. (Other compilers will also work.)
    ```powershell
    # You can easily grab them via Scoop.
-   scoop.cmd install gcc upx
+   scoop.cmd install upx
    ```
    You can install the Nim Compiler from:
    > https://github.com/dom96/choosenim
@@ -71,22 +71,11 @@ There are 2 ways to close Resolution Enforcer `ResEnforce.exe`:
    nimble install winim
    ```
 
-2. Run in PowerShell:     
+2. Run in PowerShell:              
+   ```powershell
+   # Compile ResEnforce.
+   nim -d:release --app:gui -o ResEnforce.exe c src/Nim/main.nim
 
-   - For the C Source Code.
-      ```powershell              
-      # Compile ResEnforce.
-      gcc src/C/*.c -mwindows -Wall -Wextra -o ResEnforce.exe
-
-      # Compress the compiled executable.
-      upx -9 ResEnforce.exe
-      ```
-   - For the Nim Source Code:             
-
-      ```powershell
-      # Compile ResEnforce.
-      nim -d:release --app:gui -o ResEnforce.exe c src/Nim/main.nim
-
-      # Compress the compiled executable.
-      upx -9 ResEnforce.exe
-      ```
+   # Compress the compiled executable.
+   upx -9 ResEnforce.exe
+   ```
