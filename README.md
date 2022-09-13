@@ -1,5 +1,5 @@
 # ResEnforce
-ResEnforce is a rewrite of [Resolution Enforcer](https://github.com/Aetopia/Resolution-Enforcer) but in C & Nim instead of Python.
+ResEnforce is a rewrite of [Resolution Enforcer](https://github.com/Aetopia/Resolution-Enforcer) but in Nim instead of Python.
 
 ## What is Resolution Enforcer?
 A simple program to enforce desktop resolutions on specific applications. (Win32 and UWP apps.)
@@ -56,7 +56,7 @@ There are 2 ways to close Resolution Enforcer `ResEnforce.exe`:
 
 
 # Building
-1. Download the source code and make sure GCC & UPX are installed. (Other compilers will also work.)
+1. Download the source code.
    ```powershell
    # You can easily grab them via Scoop.
    scoop.cmd install upx
