@@ -1,25 +1,12 @@
-import winim
-import os
-import strutils
-import parsecfg
-import cpuinfo
+import winim, os, strutils, parsecfg, cpuinfo
 
-# Ctrl C Handler
 proc handler {.noconv.} = quit(1)  
 setControlCHook(handler)
-
-# Prototypes
 proc GetForegroundWindowInfo: (string, string)
-proc AutoDelay: int
-
 proc OptsExist
 proc ProfLoad(title: string, exe: string): (string, string, string)
-
 proc ResEnforce(delay: int)
 proc ResReset(delay: int)
-
-proc main
-# End
 
 
 proc GetForegroundWindowInfo: (string, string) =
@@ -28,28 +15,15 @@ proc GetForegroundWindowInfo: (string, string) =
     GetWindowThreadProcessId(hwnd, &pid)
     let hProc = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, pid)
 
-    # Title
     let len = GetWindowTextLengthA(hwnd) + 1
     var title = newString(len)
     GetWindowTextA(hwnd, title, len)
 
-    # Executable
     let exe = newString(MAX_PATH)
     GetModuleFileNameExA(hProc, 0, exe, MAX_PATH)
     CloseHandle(hProc)
 
-    return (title.strip(chars={'\0'}), extractFilename(exe).strip(chars={'\0'}))
-
-proc AutoDelay: int = 
-    var delay: int
-    let cpucount = countProcessors()
-
-    if cpucount <= 4:
-        delay = 1000
-    else:
-        delay = 100
-
-    return delay
+    return (title.strip(chars={'\0'}), extractFilename(exe).strip(chars={'\0'}))   
 
 proc OptsExist =
     if (fileExists("Options.ini") == false):
@@ -79,11 +53,8 @@ proc ResEnforce(delay: int) =
         (res_t, res_e, res) = ProfLoad(title, exe)
 
         if exe == "ApplicationFrameHost.exe":
-            if res_t != "":
-                apply = true
-        
-        elif res_e != "":
-            apply = true
+            if res_t != "": apply = true
+        elif res_e != "": apply = true
 
         if apply:
             var devmode: DEVMODEW
@@ -107,11 +78,8 @@ proc ResReset(delay: int) =
         (res_t, res_e, res) = ProfLoad(title, exe)
 
         if exe == "ApplicationFrameHost.exe":
-            if res_t == "":
-                reset = true
-        
-        elif res_e == "":
-            reset = true
+            if res_t == "": reset = true  
+        elif res_e == "": reset = true
 
         if reset:
             ChangeDisplaySettings(nil, 0)
@@ -120,10 +88,12 @@ proc ResReset(delay: int) =
 
     ResEnforce(delay)      
 
-proc main =
+if isMainModule:
+    var delay: int
+    let cpucount = countProcessors()
+    if cpucount <= 4: delay = 1000
+    else: delay = 100
+
     setCurrentDir(splitpath(getAppFilename())[0])
     OptsExist()
-    ResEnforce(AutoDelay())
-        
-if isMainModule:
-    main()
+    ResEnforce(delay)
