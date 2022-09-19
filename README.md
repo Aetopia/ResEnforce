@@ -4,7 +4,8 @@ ResEnforce is a rewrite of [Resolution Enforcer](https://github.com/Aetopia/Reso
 ## What is Resolution Enforcer?
 A simple program to enforce desktop resolutions on specific applications. (Win32 and UWP apps.)
        
-This program fundamentally allows you to force an application to run at a specific resolution of your choice.         
+This program fundamentally allows you to force an application to run at a specific resolution of your choice.    
+Additionally, Resolution Enforcer will minimize your game when you switch windows or `[Alt]` + `[Tab]`.     
 Useful for UWP/Fullscreen Borderless Games since those don't support the ability to use lower resolutions.
 
 # Usage
