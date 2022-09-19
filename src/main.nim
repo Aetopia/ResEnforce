@@ -2,14 +2,14 @@ import winim, os, strutils, parsecfg, cpuinfo
 
 proc handler {.noconv.} = quit(1)  
 setControlCHook(handler)
-proc GetForegroundWindowInfo: (string, string)
+proc GetForegroundWindowInfo: (string, string, HWND)
 proc OptsExist
 proc ProfLoad(title: string, exe: string): (string, string, string)
 proc ResEnforce(delay: int)
-proc ResReset(delay: int)
+proc ResReset(delay: int, hwnd: HWND)
 
 
-proc GetForegroundWindowInfo: (string, string) =
+proc GetForegroundWindowInfo: (string, string, HWND) =
     var pid: DWORD
     let hwnd = GetForegroundWindow()
     GetWindowThreadProcessId(hwnd, &pid)
@@ -23,7 +23,7 @@ proc GetForegroundWindowInfo: (string, string) =
     GetModuleFileNameExA(hProc, 0, exe, MAX_PATH)
     CloseHandle(hProc)
 
-    return (title.strip(chars={'\0'}), extractFilename(exe).strip(chars={'\0'}))   
+    return (title.strip(chars={'\0'}), extractFilename(exe).strip(chars={'\0'}), hwnd)   
 
 proc OptsExist =
     if (fileExists("Options.ini") == false):
@@ -47,9 +47,10 @@ proc ProfLoad(title: string, exe: string): (string, string, string) =
 proc ResEnforce(delay: int) = 
     var apply = false
     var title, exe, res_t, res_e, res: string
+    var hwnd: HWND
 
     while true:
-        (title, exe) = GetForegroundWindowInfo()
+        (title, exe, hwnd) = GetForegroundWindowInfo()
         (res_t, res_e, res) = ProfLoad(title, exe)
 
         if exe == "ApplicationFrameHost.exe":
@@ -66,15 +67,14 @@ proc ResEnforce(delay: int) =
             break
         sleep(delay)
 
-    ResReset(delay)
+    ResReset(delay, hwnd)
 
-proc ResReset(delay: int) = 
-
+proc ResReset(delay: int, hwnd: HWND) = 
     var reset = false
     var title, exe, res_t, res_e, res: string
 
     while true:
-        (title, exe) = GetForegroundWindowInfo()
+        (title, exe,) = GetForegroundWindowInfo()
         (res_t, res_e, res) = ProfLoad(title, exe)
 
         if exe == "ApplicationFrameHost.exe":
@@ -82,6 +82,7 @@ proc ResReset(delay: int) =
         elif res_e == "": reset = true
 
         if reset:
+            ShowWindow(hwnd, SW_FORCEMINIMIZE)
             ChangeDisplaySettings(nil, 0)
             break
         sleep(delay)
