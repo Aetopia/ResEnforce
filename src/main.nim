@@ -82,7 +82,7 @@ proc ResReset(delay: int, hwnd: HWND) =
         elif res_e == "": reset = true
 
         if reset:
-            ShowWindow(hwnd, SW_FORCEMINIMIZE)
+            ShowWindow(hwnd, SW_SHOWMINNOACTIVE)
             ChangeDisplaySettings(nil, 0)
             break
         sleep(delay)
