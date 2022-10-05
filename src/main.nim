@@ -1,13 +1,9 @@
 import winim, os, strutils, parsecfg, cpuinfo
 
-proc handler {.noconv.} = quit(1)  
-setControlCHook(handler)
 proc GetForegroundWindowInfo: (string, string, HWND)
-proc OptsExist
 proc ProfLoad(title: string, exe: string): (string, string, string)
 proc ResEnforce(delay: int)
 proc ResReset(delay: int, hwnd: HWND)
-
 
 proc GetForegroundWindowInfo: (string, string, HWND) =
     var pid: DWORD
@@ -24,12 +20,6 @@ proc GetForegroundWindowInfo: (string, string, HWND) =
     CloseHandle(hProc)
 
     return (title.strip(chars={'\0'}), extractFilename(exe).strip(chars={'\0'}), hwnd)   
-
-proc OptsExist =
-    if (fileExists("Options.ini") == false):
-        let file = open("Options.ini", fmWrite)
-        file.write("[Profiles]\n; Title or Executable Name = Resolution\n; Example.exe = 1600x900\n; Example = 1280x720 \n")
-        file.close()
 
 proc ProfLoad(title: string, exe: string): (string, string, string) = 
     var res, res_t, res_e: string
@@ -81,20 +71,23 @@ proc ResReset(delay: int, hwnd: HWND) =
             if res_t == "": reset = true  
         elif res_e == "": reset = true
 
-        if reset:
+        if reset and exe in ("ScreenClippingHost.exe") == false:
             ShowWindow(hwnd, SW_SHOWMINNOACTIVE)
             ChangeDisplaySettings(nil, 0)
             break
+        reset = false
         sleep(delay)
 
     ResEnforce(delay)      
 
 if isMainModule:
     var delay: int
-    let cpucount = countProcessors()
-    if cpucount <= 4: delay = 1000
+    if countProcessors() <= 4: delay = 1000
     else: delay = 100
 
     setCurrentDir(splitpath(getAppFilename())[0])
-    OptsExist()
+    if (fileExists("Options.ini") == false):
+        let file = open("Options.ini", fmWrite)
+        file.write("[Profiles]\n; Title or Executable Name = Resolution\n; Example.exe = 1600x900\n; Example = 1280x720 \n")
+        file.close()
     ResEnforce(delay)
