@@ -1,11 +1,11 @@
 import winim, os, strutils, parsecfg, cpuinfo
 
-proc GetForegroundWindowInfo: (string, string, HWND)
-proc ProfLoad(title: string, exe: string): (string, string, string)
-proc ResEnforce(delay: int)
-proc ResReset(delay: int, hwnd: HWND)
+proc getForegroundWindowInfo: (string, string, HWND)
+proc loadProf(title: string, exe: string): (string, string, string)
+proc enforceRes(delay: int)
+proc resetRes(delay: int, hwnd: HWND)
 
-proc GetForegroundWindowInfo: (string, string, HWND) =
+proc getForegroundWindowInfo: (string, string, HWND) =
     var pid: DWORD
     let hwnd = GetForegroundWindow()
     GetWindowThreadProcessId(hwnd, &pid)
@@ -21,35 +21,35 @@ proc GetForegroundWindowInfo: (string, string, HWND) =
 
     return (title.strip(chars={'\0'}), extractFilename(exe).strip(chars={'\0'}), hwnd)   
 
-proc ProfLoad(title: string, exe: string): (string, string, string) = 
-    var res, res_t, res_e: string
+proc loadProf(title: string, exe: string): (string, string, string) = 
+    var res, resT, resE: string
     let file = loadConfig("Options.ini")
 
-    res_t = file.getSectionValue("Profiles", title)
-    res_e = file.getSectionValue("Profiles", exe)
+    resT = file.getSectionValue("Profiles", title)
+    resE = file.getSectionValue("Profiles", exe)
 
-    if (res_t != ""): res = res_t
-    elif (res_e != ""): res = res_e
+    if (resT != ""): res = resT
+    elif (resE != ""): res = resE
     else: res = ""
 
-    return (res_t, res_e, res)
+    return (resT, resE, res)
 
-proc ResEnforce(delay: int) = 
+proc enforceRes(delay: int) = 
     var apply = false
-    var title, exe, res_t, res_e, res: string
+    var title, exe, resT, resE, res: string
     var hwnd: HWND
 
     while true:
-        (title, exe, hwnd) = GetForegroundWindowInfo()
-        (res_t, res_e, res) = ProfLoad(title, exe)
-
+        (title, exe, hwnd) = getForegroundWindowInfo()
+        (resT, resE, res) = loadProf(title, exe)
         if exe == "ApplicationFrameHost.exe":
-            if res_t != "": apply = true
-        elif res_e != "": apply = true
+            if resT != "": apply = true
+        elif resE != "": apply = true
 
         if apply:
             var devmode: DEVMODEW
             let dm = res.split('x')
+            echo dm
             (devmode.dmPelsWidth, devmode.dmPelsHeight) = (dm[0].parseInt().DWORD, dm[1].parseInt().DWORD)
             devmode.dmFields = DM_PELSWIDTH or DM_PELSHEIGHT
             devmode.dmSize = sizeof(DEVMODEW).WORD
@@ -57,37 +57,37 @@ proc ResEnforce(delay: int) =
             break
         sleep(delay)
 
-    ResReset(delay, hwnd)
+    resetRes(delay, hwnd)
 
-proc ResReset(delay: int, hwnd: HWND) = 
+proc resetRes(delay: int, hwnd: HWND) = 
     var reset = false
-    var title, exe, res_t, res_e, res: string
+    var title, exe, resT, resE, res: string
 
     while true:
-        (title, exe,) = GetForegroundWindowInfo()
-        (res_t, res_e, res) = ProfLoad(title, exe)
+        (title, exe,) = getForegroundWindowInfo()
+        (resT, resE, res) = loadProf(title, exe)
 
         if exe == "ApplicationFrameHost.exe":
-            if res_t == "": reset = true  
-        elif res_e == "": reset = true
+            if resT == "": reset = true  
+        elif resE == "": reset = true
 
         if reset and exe in ("ScreenClippingHost.exe") == false:
-            ShowWindow(hwnd, SW_SHOWMINNOACTIVE)
+            ShowWindow(hwnd, SW_FORCEMINIMIZE)
             ChangeDisplaySettings(nil, 0)
             break
         reset = false
         sleep(delay)
 
-    ResEnforce(delay)      
+    enforceRes(delay)      
 
 if isMainModule:
     var delay: int
     if countProcessors() <= 4: delay = 1000
     else: delay = 100
 
-    setCurrentDir(splitpath(getAppFilename())[0])
+    setCurrentDir(getAppDir())
     if (fileExists("Options.ini") == false):
         let file = open("Options.ini", fmWrite)
         file.write("[Profiles]\n; Title or Executable Name = Resolution\n; Example.exe = 1600x900\n; Example = 1280x720 \n")
         file.close()
-    ResEnforce(delay)
+    enforceRes(delay)
