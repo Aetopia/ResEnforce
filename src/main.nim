@@ -49,7 +49,6 @@ proc enforceRes(delay: int) =
         if apply:
             var devmode: DEVMODEW
             let dm = res.split('x')
-            echo dm
             (devmode.dmPelsWidth, devmode.dmPelsHeight) = (dm[0].parseInt().DWORD, dm[1].parseInt().DWORD)
             devmode.dmFields = DM_PELSWIDTH or DM_PELSHEIGHT
             devmode.dmSize = sizeof(DEVMODEW).WORD
