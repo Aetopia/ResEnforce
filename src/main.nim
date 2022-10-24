@@ -42,9 +42,7 @@ proc enforceRes(delay: int) =
         dm: seq[string]
         devmode: DEVMODEW
         hwnd: HWND
-        lpwndpl: WINDOWPLACEMENT
     devmode.dmSize = sizeof(DEVMODEW).WORD
-    lpwndpl.length = sizeof(WINDOWPLACEMENT).DWORD
 
     while true:
         (title, exe, hwnd) = getForegroundWindowInfo()
@@ -58,8 +56,7 @@ proc enforceRes(delay: int) =
             dm = res.split('x')
             (devmode.dmPelsWidth, devmode.dmPelsHeight) = (dm[0].parseInt().DWORD, dm[1].parseInt().DWORD)
             devmode.dmFields = DM_PELSWIDTH or DM_PELSHEIGHT
-            GetWindowPlacement(hwnd, &lpwndpl)
-            if lpwndpl.showCmd notin [1, 3, 8, 9]: ShowWindow(hwnd, SW_RESTORE)
+            ShowWindow(hwnd, SW_RESTORE)
             ChangeDisplaySettings(&devmode, 0)
             break
         sleep(delay)
@@ -80,7 +77,7 @@ proc resetRes(delay: int, hwnd: HWND) =
         elif resE == "": reset = true
 
         if reset and exe notin ("ScreenClippingHost.exe"):
-            ShowWindow(hwnd, SW_SHOWMINNOACTIVE)
+            ShowWindow(hwnd, SW_MINIMIZE)
             ChangeDisplaySettings(nil, 0)
             break
         reset = false
