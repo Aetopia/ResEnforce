@@ -6,16 +6,17 @@ proc enforceRes(delay: int)
 proc resetRes(delay: int, hwnd: HWND)
 
 proc getForegroundWindowInfo: (string, string, HWND) =
-    var pid: DWORD
-    let hwnd = GetForegroundWindow()
+    var 
+        pid: DWORD
+        hwnd = GetForegroundWindow()
     GetWindowThreadProcessId(hwnd, &pid)
-    let hProc = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, pid)
-
-    let len = GetWindowTextLengthA(hwnd) + 1
-    var title = newString(len)
+    var 
+        hProc = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, pid) 
+        len = GetWindowTextLengthA(hwnd) + 1
+        title = newString(len)
+        exe = newString(MAX_PATH)
+        
     GetWindowTextA(hwnd, title, len)
-
-    let exe = newString(MAX_PATH)
     GetModuleFileNameExA(hProc, 0, exe, MAX_PATH)
     CloseHandle(hProc)
 
@@ -23,7 +24,7 @@ proc getForegroundWindowInfo: (string, string, HWND) =
 
 proc loadProf(title: string, exe: string): (string, string, string) = 
     var res, resT, resE: string
-    let file = loadConfig("Options.ini")
+    var file = loadConfig("Options.ini")
 
     resT = file.getSectionValue("Profiles", title)
     resE = file.getSectionValue("Profiles", exe)
@@ -35,23 +36,30 @@ proc loadProf(title: string, exe: string): (string, string, string) =
     return (resT, resE, res)
 
 proc enforceRes(delay: int) = 
-    var apply = false
-    var title, exe, resT, resE, res: string
-    var hwnd: HWND
+    var 
+        apply = false
+        title, exe, resT, resE, res: string
+        dm: seq[string]
+        devmode: DEVMODEW
+        hwnd: HWND
+        lpwndpl: WINDOWPLACEMENT
+    devmode.dmSize = sizeof(DEVMODEW).WORD
+    lpwndpl.length = sizeof(WINDOWPLACEMENT).DWORD
 
     while true:
         (title, exe, hwnd) = getForegroundWindowInfo()
         (resT, resE, res) = loadProf(title, exe)
+
         if exe == "ApplicationFrameHost.exe":
             if resT != "": apply = true
         elif resE != "": apply = true
 
         if apply:
-            var devmode: DEVMODEW
-            let dm = res.split('x')
+            dm = res.split('x')
             (devmode.dmPelsWidth, devmode.dmPelsHeight) = (dm[0].parseInt().DWORD, dm[1].parseInt().DWORD)
             devmode.dmFields = DM_PELSWIDTH or DM_PELSHEIGHT
-            devmode.dmSize = sizeof(DEVMODEW).WORD
+            GetWindowPlacement(hwnd, &lpwndpl)
+            if lpwndpl.showCmd notin [1, 3, 8, 9]: ShowWindow(hwnd, SW_RESTORE)
             ChangeDisplaySettings(&devmode, 0)
             break
         sleep(delay)
@@ -59,8 +67,9 @@ proc enforceRes(delay: int) =
     resetRes(delay, hwnd)
 
 proc resetRes(delay: int, hwnd: HWND) = 
-    var reset = false
-    var title, exe, resT, resE, res: string
+    var 
+        reset = false
+        title, exe, resT, resE, res: string
 
     while true:
         (title, exe,) = getForegroundWindowInfo()
@@ -70,8 +79,8 @@ proc resetRes(delay: int, hwnd: HWND) =
             if resT == "": reset = true  
         elif resE == "": reset = true
 
-        if reset and exe in ("ScreenClippingHost.exe") == false:
-            ShowWindow(hwnd, SW_FORCEMINIMIZE)
+        if reset and exe notin ("ScreenClippingHost.exe"):
+            ShowWindow(hwnd, SW_SHOWMINNOACTIVE)
             ChangeDisplaySettings(nil, 0)
             break
         reset = false
@@ -86,7 +95,7 @@ if isMainModule:
 
     setCurrentDir(getAppDir())
     if (fileExists("Options.ini") == false):
-        let file = open("Options.ini", fmWrite)
+        var file = open("Options.ini", fmWrite)
         file.write("[Profiles]\n; Title or Executable Name = Resolution\n; Example.exe = 1600x900\n; Example = 1280x720 \n")
         file.close()
     enforceRes(delay)
