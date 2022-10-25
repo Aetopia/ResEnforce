@@ -67,7 +67,7 @@ proc resetRes(delay: int, hwnd: HWND) =
     var 
         reset = false
         title, exe, resT, resE, res: string
-
+        
     while true:
         (title, exe,) = getForegroundWindowInfo()
         (resT, resE, res) = loadProf(title, exe)
@@ -78,6 +78,7 @@ proc resetRes(delay: int, hwnd: HWND) =
 
         if reset and exe notin ("ScreenClippingHost.exe"):
             ShowWindow(hwnd, SW_MINIMIZE)
+            SetForegroundWindow(FindWindow("Shell_TrayWnd", ""))
             ChangeDisplaySettings(nil, 0)
             break
         reset = false
