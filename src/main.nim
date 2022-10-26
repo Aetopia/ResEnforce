@@ -56,8 +56,8 @@ proc enforceRes(delay: int) =
             dm = res.split('x')
             (devmode.dmPelsWidth, devmode.dmPelsHeight) = (dm[0].parseInt().DWORD, dm[1].parseInt().DWORD)
             devmode.dmFields = DM_PELSWIDTH or DM_PELSHEIGHT
-            ChangeDisplaySettings(&devmode, 0)
-            break
+            if ChangeDisplaySettings(&devmode, 0) == DISP_CHANGE_SUCCESSFUL:
+                break
         sleep(delay)
 
     resetRes(delay, hwnd)
@@ -78,8 +78,8 @@ proc resetRes(delay: int, hwnd: HWND) =
         if reset and exe notin ("ScreenClippingHost.exe"):
             ShowWindow(hwnd, SW_SHOWMINNOACTIVE)
             SetForegroundWindow(FindWindow("Shell_TrayWnd", ""))
-            ChangeDisplaySettings(nil, 0)
-            break
+            if ChangeDisplaySettings(nil, 0) == DISP_CHANGE_SUCCESSFUL:
+                break
         reset = false
         sleep(delay)
 
