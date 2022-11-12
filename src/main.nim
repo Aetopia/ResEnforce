@@ -46,7 +46,8 @@ proc enforceRes(poll: int) =
     devmode.dmSize = sizeof(DEVMODE).WORD
 
     while true:
-        ((title, exe, hwnd), (resT, resE, res)) = (getForegroundWindowInfo(), loadProf(title, exe))
+        (title, exe, hwnd) = getForegroundWindowInfo()
+        (resT, resE, res) = loadProf(title, exe)
 
         if exe == "ApplicationFrameHost.exe":
             if resT != "": apply = true
@@ -57,6 +58,7 @@ proc enforceRes(poll: int) =
             (devmode.dmPelsWidth, devmode.dmPelsHeight) = (dm[0].parseInt().DWORD, dm[1].parseInt().DWORD)
             devmode.dmFields = DM_PELSWIDTH or DM_PELSHEIGHT
             if ChangeDisplaySettings(&devmode, 0) == DISP_CHANGE_SUCCESSFUL: break
+        apply = false
         sleep(poll)
 
     resetRes(poll, hwnd)
@@ -67,7 +69,8 @@ proc resetRes(poll: int, hwnd: HWND) =
         title, exe, resT, resE, res: string
         
     while true:
-        ((title, exe,), (resT, resE, res)) = (getForegroundWindowInfo(), loadProf(title, exe))
+        (title, exe,) = getForegroundWindowInfo()
+        (resT, resE, res) = loadProf(title, exe)
 
         if exe == "ApplicationFrameHost.exe":
             if resT == "": reset = true  
