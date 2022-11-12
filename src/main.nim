@@ -1,14 +1,15 @@
-import winim, os, strutils, parsecfg, cpuinfo
+import winim/[mean, extra], os, strutils, parsecfg, cpuinfo
 
 proc getForegroundWindowInfo: (string, string, HWND)
 proc loadProf(title: string, exe: string): (string, string, string)
-proc enforceRes(delay: int)
-proc resetRes(delay: int, hwnd: HWND)
+proc enforceRes(poll: int)
+proc resetRes(poll: int, hwnd: HWND)
 
 proc getForegroundWindowInfo: (string, string, HWND) =
     var 
         pid: DWORD
         hwnd = GetForegroundWindow()
+        
     GetWindowThreadProcessId(hwnd, &pid)
     var 
         hProc = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, pid) 
@@ -35,18 +36,17 @@ proc loadProf(title: string, exe: string): (string, string, string) =
 
     return (resT, resE, res)
 
-proc enforceRes(delay: int) = 
+proc enforceRes(poll: int) = 
     var 
         apply = false
         title, exe, resT, resE, res: string
         dm: seq[string]
-        devmode: DEVMODEW
+        devmode: DEVMODE
         hwnd: HWND
-    devmode.dmSize = sizeof(DEVMODEW).WORD
+    devmode.dmSize = sizeof(DEVMODE).WORD
 
     while true:
-        (title, exe, hwnd) = getForegroundWindowInfo()
-        (resT, resE, res) = loadProf(title, exe)
+        ((title, exe, hwnd), (resT, resE, res)) = (getForegroundWindowInfo(), loadProf(title, exe))
 
         if exe == "ApplicationFrameHost.exe":
             if resT != "": apply = true
@@ -56,43 +56,45 @@ proc enforceRes(delay: int) =
             dm = res.split('x')
             (devmode.dmPelsWidth, devmode.dmPelsHeight) = (dm[0].parseInt().DWORD, dm[1].parseInt().DWORD)
             devmode.dmFields = DM_PELSWIDTH or DM_PELSHEIGHT
-            if ChangeDisplaySettings(&devmode, 0) == DISP_CHANGE_SUCCESSFUL:
-                break
-        sleep(delay)
+            if ChangeDisplaySettings(&devmode, 0) == DISP_CHANGE_SUCCESSFUL: break
+        sleep(poll)
 
-    resetRes(delay, hwnd)
+    resetRes(poll, hwnd)
 
-proc resetRes(delay: int, hwnd: HWND) = 
+proc resetRes(poll: int, hwnd: HWND) = 
     var 
         reset = false
         title, exe, resT, resE, res: string
         
     while true:
-        (title, exe,) = getForegroundWindowInfo()
-        (resT, resE, res) = loadProf(title, exe)
+        ((title, exe,), (resT, resE, res)) = (getForegroundWindowInfo(), loadProf(title, exe))
 
         if exe == "ApplicationFrameHost.exe":
             if resT == "": reset = true  
         elif resE == "": reset = true
 
-        if reset and exe notin ("ScreenClippingHost.exe"):
+        if reset:
             ShowWindow(hwnd, SW_SHOWMINNOACTIVE)
-            SetForegroundWindow(FindWindow("Shell_TrayWnd", ""))
-            if ChangeDisplaySettings(nil, 0) == DISP_CHANGE_SUCCESSFUL:
-                break
+            SetForegroundWindow(FindWindow("Shell_TrayWnd", nil))
+            if ChangeDisplaySettings(nil, 0) == DISP_CHANGE_SUCCESSFUL: break
         reset = false
-        sleep(delay)
+        sleep(poll)
 
-    enforceRes(delay)      
+    enforceRes(poll)      
 
 if isMainModule:
-    var delay: int
-    if countProcessors() <= 4: delay = 1000
-    else: delay = 100
 
+    # Set the polling rate depending on the amount of CPU threads..
+    var poll: int
+    case countProcessors():
+        of 0..4: poll = 1000
+        of 5..7: poll = 100
+        else: poll = 1
+
+    # Initialize Resolution Enforcer.
     setCurrentDir(getAppDir())
     if (fileExists("Options.ini") == false):
         var file = open("Options.ini", fmWrite)
         file.write("[Profiles]\n; Title or Executable Name = Resolution\n; Example.exe = 1600x900\n; Example = 1280x720 \n")
         file.close()
-    enforceRes(delay)
+    enforceRes(poll)
