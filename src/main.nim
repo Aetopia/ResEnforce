@@ -57,7 +57,9 @@ proc enforceRes(poll: int) =
             dm = res.split('x')
             (devmode.dmPelsWidth, devmode.dmPelsHeight) = (dm[0].parseInt().DWORD, dm[1].parseInt().DWORD)
             devmode.dmFields = DM_PELSWIDTH or DM_PELSHEIGHT
-            if ChangeDisplaySettings(&devmode, 0) == DISP_CHANGE_SUCCESSFUL: break
+            if ChangeDisplaySettings(&devmode, 0) == DISP_CHANGE_SUCCESSFUL: 
+                SetForegroundWindow(hwnd)
+                break
         apply = false
         sleep(poll)
 
@@ -78,8 +80,9 @@ proc resetRes(poll: int, hwnd: HWND) =
 
         if reset:
             ShowWindow(hwnd, SW_SHOWMINNOACTIVE)
-            SetForegroundWindow(FindWindow("Shell_TrayWnd", nil))
-            if ChangeDisplaySettings(nil, 0) == DISP_CHANGE_SUCCESSFUL: break
+            if ChangeDisplaySettings(nil, 0) == DISP_CHANGE_SUCCESSFUL: 
+                SetForegroundWindow(FindWindow("Shell_TrayWnd", nil))
+                break
         reset = false
         sleep(poll)
 
