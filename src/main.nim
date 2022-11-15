@@ -57,9 +57,7 @@ proc enforceRes(poll: int) =
             dm = res.split('x')
             (devmode.dmPelsWidth, devmode.dmPelsHeight) = (dm[0].parseInt().DWORD, dm[1].parseInt().DWORD)
             devmode.dmFields = DM_PELSWIDTH or DM_PELSHEIGHT
-            if ChangeDisplaySettings(&devmode, 0) == DISP_CHANGE_SUCCESSFUL: 
-                SetForegroundWindow(hwnd)
-                break
+            if ChangeDisplaySettings(&devmode, 0) == DISP_CHANGE_SUCCESSFUL: break
         apply = false
         sleep(poll)
 
