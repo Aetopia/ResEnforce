@@ -78,8 +78,8 @@ proc resetRes(poll: int, hwnd: HWND) =
 
         if reset:
             ShowWindow(hwnd, SW_SHOWMINNOACTIVE)
+            SetForegroundWindow(FindWindow("Shell_TrayWnd", nil))
             if ChangeDisplaySettings(nil, 0) == DISP_CHANGE_SUCCESSFUL: 
-                SetForegroundWindow(FindWindow("Shell_TrayWnd", nil))
                 break
         reset = false
         sleep(poll)
