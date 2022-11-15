@@ -8,10 +8,10 @@ proc resetRes(poll: int, hwnd: HWND)
 proc getForegroundWindowInfo: (string, string, HWND) =
     var 
         pid: DWORD
-        hwnd = GetForegroundWindow()
+    let hwnd = GetForegroundWindow()
         
     GetWindowThreadProcessId(hwnd, &pid)
-    var 
+    let
         hProc = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, pid) 
         len = GetWindowTextLengthA(hwnd) + 1
         title = newString(len)
@@ -57,6 +57,7 @@ proc enforceRes(poll: int) =
             dm = res.split('x')
             (devmode.dmPelsWidth, devmode.dmPelsHeight) = (dm[0].parseInt().DWORD, dm[1].parseInt().DWORD)
             devmode.dmFields = DM_PELSWIDTH or DM_PELSHEIGHT
+            ShowWindow(hwnd, SW_RESTORE)
             if ChangeDisplaySettings(&devmode, 0) == DISP_CHANGE_SUCCESSFUL: break
         apply = false
         sleep(poll)
@@ -79,8 +80,7 @@ proc resetRes(poll: int, hwnd: HWND) =
         if reset:
             ShowWindow(hwnd, SW_SHOWMINNOACTIVE)
             SetForegroundWindow(FindWindow("Shell_TrayWnd", nil))
-            if ChangeDisplaySettings(nil, 0) == DISP_CHANGE_SUCCESSFUL: 
-                break
+            if ChangeDisplaySettings(nil, 0) == DISP_CHANGE_SUCCESSFUL: break
         reset = false
         sleep(poll)
 
@@ -98,7 +98,5 @@ if isMainModule:
     # Initialize Resolution Enforcer.
     setCurrentDir(getAppDir())
     if (fileExists("Options.ini") == false):
-        var file = open("Options.ini", fmWrite)
-        file.write("[Profiles]\n; Title or Executable Name = Resolution\n; Example.exe = 1600x900\n; Example = 1280x720 \n")
-        file.close()
+        writeFile("Options.ini", "[Profiles]\n; Title or Executable Name = Resolution\n; Example.exe = 1600x900\n; Example = 1280x720 \n")
     enforceRes(poll)
