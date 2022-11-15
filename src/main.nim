@@ -88,7 +88,7 @@ proc resetRes(poll: int, hwnd: HWND) =
 
 if isMainModule:
 
-    # Set the polling rate depending on the amount of CPU threads..
+    # Set the polling rate depending on the amount of CPU threads.
     var poll: int
     case countProcessors():
         of 0..4: poll = 1000
