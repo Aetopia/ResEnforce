@@ -58,7 +58,8 @@ proc enforceRes(poll: int) =
             (devmode.dmPelsWidth, devmode.dmPelsHeight) = (dm[0].parseInt().DWORD, dm[1].parseInt().DWORD)
             devmode.dmFields = DM_PELSWIDTH or DM_PELSHEIGHT
             ShowWindow(hwnd, SW_RESTORE)
-            if ChangeDisplaySettings(&devmode, 0) == DISP_CHANGE_SUCCESSFUL: break
+            if ChangeDisplaySettings(&devmode, 0) == DISP_CHANGE_SUCCESSFUL: 
+                BringWindowToTop(hwnd); break
         apply = false
         sleep(poll)
 
