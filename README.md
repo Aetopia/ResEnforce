@@ -1,5 +1,5 @@
-> ![IMPORTANT]
-> This project is no longer being developed upon.
+> [!IMPORTANT]
+> This project is no longer being developed.<br>
 > It is now archived & deprecated.
 
 # ResEnforce
