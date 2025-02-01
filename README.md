@@ -1,3 +1,7 @@
+> ![IMPORTANT]
+> This project is no longer being developed upon.
+> It is now archived & deprecated.
+
 # ResEnforce
 ResEnforce is a rewrite of [Resolution Enforcer](https://github.com/Aetopia/Resolution-Enforcer) but in Nim instead of Python.
 
